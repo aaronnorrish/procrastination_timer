@@ -34,7 +34,10 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread.start();
 		timerStarted = false;
 	}
-
+	
+	/**
+	* Draw graphics on screen. 
+	**/
 	public void paint(Graphics g){
 		gfx.setColor(Color.WHITE);
 		gfx.fillRect(0, 0, WIDTH, HEIGHT);
