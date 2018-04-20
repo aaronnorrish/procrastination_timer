@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.time.LocalTime;
 import java.time.Duration;
 import java.awt.event.MouseListener;
@@ -18,6 +19,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 	Graphics gfx;
 	Image img;
 	private boolean timerStarted, w, cmnd;
+	LocalTime start, now;
 
 	/**
 	* Initialises applet and associated variables.
@@ -31,6 +33,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread = new Thread(this);
 		thread.start();
 		timerStarted = false;
+
 	}
 
 	public void paint(Graphics g){
@@ -53,9 +56,15 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		}
 		else{
 			gfx.drawString("Stop Timer", 175, 155);
+			now = LocalTime.now();
+			long duration = Duration.between(start, now).getSeconds();
+			long hours = duration / 3600;
+			long minutes = (duration % 3600) / 60;
+			long seconds = duration % 60;
+			gfx.drawString(String.format("%02d:%02d:%02d", hours, minutes, seconds), 200, 250);
 		}
 
-		gfx.drawString("10:00:00", 200, 250);
+		// gfx.drawString("10:00:00", 200, 250);
 
 		g.drawImage(img, 0, 0, this);
 	}
@@ -87,6 +96,9 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		// if button clicked, toggle start timer
 		if(e.getX() >= 122 && e.getX() <= 358 && e.getY() >= 102 && e.getY() <= 198){
 			timerStarted = !timerStarted;
+		}
+		if(timerStarted){
+			start = LocalTime.now();
 		}
 
 	}
@@ -130,7 +142,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 
 	}
 
