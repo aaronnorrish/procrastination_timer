@@ -20,6 +20,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 	Image img;
 	private boolean timerStarted, w, cmnd;
 	LocalTime start, now;
+	private long duration, hours, minutes, seconds;
 
 	/**
 	* Initialises applet and associated variables.
@@ -33,7 +34,6 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread = new Thread(this);
 		thread.start();
 		timerStarted = false;
-
 	}
 
 	public void paint(Graphics g){
@@ -47,24 +47,24 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 		gfx.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		gfx.setColor(Color.BLACK);
-		gfx.drawString("Timer", 200, 35);
+		gfx.drawString("Procrastination Timer", 100, 35);
 
 		gfx.setFont(new Font("Tahoma", Font.PLAIN, 28));
+		gfx.drawString("Time Wasted: ", 105, 250);
+
 		if(!timerStarted){
-			//draw button
 			gfx.drawString("Start Timer", 175, 155);
+			gfx.drawString(String.format("%d:%02d:%02d", 0, 0, 0), 280, 250);
 		}
 		else{
 			gfx.drawString("Stop Timer", 175, 155);
 			now = LocalTime.now();
-			long duration = Duration.between(start, now).getSeconds();
-			long hours = duration / 3600;
-			long minutes = (duration % 3600) / 60;
-			long seconds = duration % 60;
-			gfx.drawString(String.format("%02d:%02d:%02d", hours, minutes, seconds), 200, 250);
+			duration = Duration.between(start, now).getSeconds();
+			hours = duration / 3600;
+			minutes = (duration % 3600) / 60;
+			seconds = duration % 60;
+			gfx.drawString(String.format("%d:%02d:%02d", hours, minutes, seconds), 280, 250);
 		}
-
-		// gfx.drawString("10:00:00", 200, 250);
 
 		g.drawImage(img, 0, 0, this);
 	}
@@ -99,6 +99,9 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		}
 		if(timerStarted){
 			start = LocalTime.now();
+		}
+		else{
+			//save time to file
 		}
 
 	}
