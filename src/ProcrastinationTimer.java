@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.time.LocalTime;
 import java.time.Duration;
 import java.awt.event.MouseListener;
@@ -96,14 +95,13 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		// if button clicked, toggle start timer
 		if(e.getX() >= 122 && e.getX() <= 358 && e.getY() >= 102 && e.getY() <= 198){
 			timerStarted = !timerStarted;
+			if(timerStarted){
+				start = LocalTime.now();
+			}
+			else{
+				//save time to file
+			}
 		}
-		if(timerStarted){
-			start = LocalTime.now();
-		}
-		else{
-			//save time to file
-		}
-
 	}
 
 	@Override
