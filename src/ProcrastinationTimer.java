@@ -9,16 +9,26 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
 import java.time.LocalTime;
 import java.time.Duration;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class ProcrastinationTimer extends Applet implements Runnable, KeyListener, MouseListener{
 	final int WIDTH = 480, HEIGHT = 400;
 	Thread thread;
 	Graphics gfx;
 	Image img;
-	private boolean timerStarted, w, cmnd;
+	private boolean timerStarted, fileExists, w, cmnd;
 	LocalTime start, now;
 	private long duration, hours, minutes, seconds;
 	private long hoursToday, minutesToday, secondsToday;
@@ -35,14 +45,17 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread = new Thread(this);
 		thread.start();
 		timerStarted = false;
-		hoursToday = 0;
-		minutesToday = 0;
-		secondsToday = 0;
+		//read data file: check if anything is recorded for Today
+		//if so set hoursToday .. accordingly, otherwise 0
+		checkData();
+		// hoursToday = 0;
+		// minutesToday = 0;
+		// secondsToday = 0;
 
 	}
-	
+
 	/**
-	* Draw graphics on screen. 
+	* Draw graphics on screen.
 	**/
 	public void paint(Graphics g){
 		gfx.setColor(Color.WHITE);
@@ -102,6 +115,39 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 	}
 
+	private void checkData(){
+		try{
+			FileReader fr = new FileReader("data.txt");
+			BufferedReader br = new BufferedReader(fr);
+			fileExists = true;
+			//need to check if last line is today, rewrite, otherwise append
+			System.out.println(br.readLine());
+			hoursToday = 0;
+			minutesToday = 0;
+			secondsToday = 0;
+		}
+		catch(IOException e){
+			fileExists = false;
+			hoursToday = 0;
+			minutesToday = 0;
+			secondsToday = 0;
+		}
+	}
+
+	private void writeToFile(){
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+		Date date = new Date();
+		try{
+			FileWriter write = new FileWriter("data.txt", false);
+			PrintWriter printLine = new PrintWriter(write);
+			printLine.printf("%s " + "%d:%02d:%02d", dateFormat.format(date), hoursToday, minutesToday, secondsToday);
+			printLine.close();
+		}
+		catch(IOException e){
+			System.out.println(e.getMessage());
+		}
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// if button clicked, toggle start timer
@@ -155,6 +201,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_W){
+			writeToFile();
 			System.exit(0);
 		}
 
