@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.time.LocalTime;
 import java.time.Duration;
 import java.awt.event.MouseListener;
@@ -20,6 +21,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 	private boolean timerStarted, w, cmnd;
 	LocalTime start, now;
 	private long duration, hours, minutes, seconds;
+	private long hoursToday, minutesToday, secondsToday;
 
 	/**
 	* Initialises applet and associated variables.
@@ -33,6 +35,10 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread = new Thread(this);
 		thread.start();
 		timerStarted = false;
+		hoursToday = 0;
+		minutesToday = 0;
+		secondsToday = 0;
+
 	}
 	
 	/**
@@ -53,10 +59,12 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 		gfx.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		gfx.drawString("Time Wasted: ", 105, 250);
+		gfx.drawString("Time Wasted Today: ", 60, 295);
 
 		if(!timerStarted){
 			gfx.drawString("Start Timer", 175, 155);
 			gfx.drawString(String.format("%d:%02d:%02d", 0, 0, 0), 280, 250);
+			gfx.drawString(String.format("%d:%02d:%02d", hoursToday, minutesToday, secondsToday), 320, 295);
 		}
 		else{
 			gfx.drawString("Stop Timer", 175, 155);
@@ -66,6 +74,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 			minutes = (duration % 3600) / 60;
 			seconds = duration % 60;
 			gfx.drawString(String.format("%d:%02d:%02d", hours, minutes, seconds), 280, 250);
+			gfx.drawString(String.format("%d:%02d:%02d", hoursToday, minutesToday, secondsToday), 320, 295);
 		}
 
 		g.drawImage(img, 0, 0, this);
@@ -102,6 +111,13 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 				start = LocalTime.now();
 			}
 			else{
+				secondsToday += seconds;
+				minutesToday += minutes + secondsToday/60;
+				hoursToday += hours + minutesToday/60;
+
+				secondsToday = secondsToday % 60;
+				minutesToday = minutesToday % 60;
+
 				//save time to file
 			}
 		}
