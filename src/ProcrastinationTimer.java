@@ -45,13 +45,7 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 		thread = new Thread(this);
 		thread.start();
 		timerStarted = false;
-		//read data file: check if anything is recorded for Today
-		//if so set hoursToday .. accordingly, otherwise 0
 		checkData();
-		// hoursToday = 0;
-		// minutesToday = 0;
-		// secondsToday = 0;
-
 	}
 
 	/**
@@ -102,17 +96,13 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 	public void run() {
 		while(true){
-
-
 			repaint();
-
 			try{
 				Thread.sleep(10);
 			} catch (InterruptedException e){
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void checkData(){
@@ -120,8 +110,6 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 			FileReader fr = new FileReader("data.txt");
 			BufferedReader br = new BufferedReader(fr);
 			fileExists = true;
-			//need to check if last line is today, rewrite, otherwise append
-			System.out.println(br.readLine());
 			hoursToday = 0;
 			minutesToday = 0;
 			secondsToday = 0;
@@ -160,42 +148,31 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 				secondsToday += seconds;
 				minutesToday += minutes + secondsToday/60;
 				hoursToday += hours + minutesToday/60;
-
+				
 				secondsToday = secondsToday % 60;
 				minutesToday = minutesToday % 60;
-
-				//save time to file
 			}
 		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -209,8 +186,6 @@ public class ProcrastinationTimer extends Applet implements Runnable, KeyListene
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
-
 	}
 
 }
